@@ -4,8 +4,8 @@ from pprint import pprint
 import os
 
 
-lp_cachedir = os.path.expanduser("~/.launchpadlib/cache/")
-launchpad = Launchpad.login_anonymously('anon', 'production', lp_cachedir)
+_lp_cachedir = os.path.expanduser("~/.launchpadlib/cache/")
+launchpad = Launchpad.login_anonymously('anon', 'production', _lp_cachedir)
 
 
 def get_binaries(ppa_owner, ppa_name, package):
