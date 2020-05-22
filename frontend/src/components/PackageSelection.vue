@@ -8,7 +8,7 @@
                 v-model="ppaOwner"
                 placeholder="PPA owner">
             </b-input>
-        </b-field>
+          </b-field>
         </div>
 
         <div class="column">
@@ -23,7 +23,22 @@
                 @select="option => ppaName = option">
                 <template slot="empty">No results found</template>
             </b-autocomplete>
-        </b-field>
+          </b-field>
+        </div>
+
+        <div class="column">
+          <b-field label="Package Name">
+            <b-autocomplete
+                v-model="packageName"
+                :loading="packageSuggestionsLoading"
+                :data="filteredPackageSuggestions"
+                placeholder="Package name"
+                open-on-focus
+                clearable
+                @select="option => packageName = option">
+                <template slot="empty">No results found</template>
+            </b-autocomplete>
+          </b-field>
         </div>
       </div>
     </div>
@@ -40,16 +55,25 @@ export default {
       ppaOwner: '',
       ppaNameSuggestionsLoading: false,
       ppaNameSuggestions: [],
-      ppaName: ''
+      ppaName: '',
+      packageSuggestionsLoading: false,
+      packageSuggestions: [],
+      packageName: ''
     }
   },
   computed: {
     filteredPpaNameSuggestions () {
       return this.ppaNameSuggestions.filter((option) => {
         return option
-          .toString()
           .toLowerCase()
           .indexOf((this.ppaName || '').toLowerCase()) >= 0
+      })
+    },
+    filteredPackageSuggestions () {
+      return this.packageSuggestions.filter((option) => {
+        return option
+          .toLowerCase()
+          .indexOf((this.packageName || '').toLowerCase()) >= 0
       })
     }
   },
@@ -68,6 +92,22 @@ export default {
         })
         .finally(() => {
           this.ppaNameSuggestionsLoading = false
+        })
+    }, 500),
+    ppaName: debounce(function (ppaName) {
+      this.packageSuggestionsLoading = true
+      this.$http.get(`/api/owner/${this.ppaOwner}/ppa/${ppaName}/list_packages`)
+        .then(({ data }) => {
+          this.packageSuggestions = []
+          console.log(data)
+          data.forEach((item) => this.packageSuggestions.push(item))
+        })
+        .catch((err) => {
+          console.log(err)
+          this.packageSuggestions = []
+        })
+        .finally(() => {
+          this.packageSuggestionsLoading = false
         })
     }, 500)
   },
