@@ -25,7 +25,7 @@ def get_binary_info(binary):
     daily_downloads = binary.getDownloadCounts()
     daily = collections.defaultdict(lambda: 0)
     for downloads in daily_downloads:
-        daily[downloads.day] += downloads.count
+        daily[downloads.day.date()] += downloads.count
 
     info = {
         'display_name': binary.display_name,
@@ -33,8 +33,7 @@ def get_binary_info(binary):
         #'architecture_specific': binary.architecture_specific,
         'distro_arch_series_link': binary.distro_arch_series_link,
         'total_downloads': binary.getDownloadCount(),
-        'daily_downloads': daily,
-        'binary': binary,
+        'daily_downloads': dict(daily),
     }
     return info
 
