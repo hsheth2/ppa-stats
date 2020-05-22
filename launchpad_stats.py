@@ -4,7 +4,6 @@
 # https://gist.github.com/springmeyer/2778600
 # https://gist.github.com/stefansundin/f9df6c5e0fd184c60709
 
-# TODO: look at https://github.com/YokoZar/ppa-stats/blob/master/ppa-stats
 
 from launchpadlib.launchpad import Launchpad
 import os
@@ -21,6 +20,6 @@ bins = ppa.getPublishedBinaries(binary_name=PACKAGE)
 
 for bin in bins:
     if bin.copied_from_archive_link is None:
-        print(bin.binary_package_version, bin.getDownloadCount(), bin.architecture_specific, bin.display_name, bin)
+        print(bin.binary_package_version, bin.distro_arch_series_link, bin.getDownloadCount(), bin.architecture_specific, bin.display_name, bin)
 
 
