@@ -15,7 +15,7 @@ def downloads(ppa_owner: str, ppa_name: str, package_name: str) -> List[Dict[str
             info = stats.get_binary_info(binary)
             downloads.append(info)
         return downloads
-    except NotFound as e:
+    except (NotFound, KeyError) as e:
         raise HTTPException(404, str(e)) from e
 
 
@@ -29,7 +29,7 @@ def list_ppas(ppa_owner: str) -> List[str]:
         for ppa in owner.ppas:
             ppas.append(ppa.name)
         return ppas
-    except NotFound as e:
+    except (NotFound, KeyError) as e:
         raise HTTPException(404, str(e)) from e
 
 @app.get('/api/owner/{ppa_owner}/ppa/{ppa_name}/list_packages')
@@ -44,5 +44,5 @@ def list_packages(ppa_owner: str, ppa_name: str) -> List[str]:
             package = binary.binary_package_name
             packages.add(package)
         return list(packages)
-    except NotFound as e:
+    except (NotFound, KeyError) as e:
         raise HTTPException(404, str(e)) from e

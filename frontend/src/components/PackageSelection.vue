@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce'
+
 export default {
   name: 'PackageSelection',
   data () {
@@ -47,22 +49,27 @@ export default {
         return option
           .toString()
           .toLowerCase()
-          .indexOf(this.ppaOwner.toLowerCase()) >= 0
+          .indexOf((this.ppaName || '').toLowerCase()) >= 0
       })
     }
   },
   watch: {
-    ppaOwner: function (ppaOwner) {
+    ppaOwner: debounce(function (ppaOwner) {
       this.ppaNameSuggestionsLoading = true
       this.$http.get(`/api/owner/${ppaOwner}/list_ppas`)
         .then(({ data }) => {
           this.ppaNameSuggestions = []
-          data.foreach((item) => this.ppaNameSuggestions.push(item))
+          console.log(data)
+          data.forEach((item) => this.ppaNameSuggestions.push(item))
+        })
+        .catch((err) => {
+          console.log(err)
+          this.ppaNameSuggestions = []
         })
         .finally(() => {
           this.ppaNameSuggestionsLoading = false
         })
-    }
+    }, 500)
   },
   props: {
   }
