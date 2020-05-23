@@ -64,6 +64,10 @@ export default {
       packageSuggestions: []
     }
   },
+  created: function () {
+    this.updatePpaNameSuggestions(this.ppaOwner)
+    this.updatePackageNameSuggestions(this.ppaName)
+  },
   computed: {
     filteredPpaNameSuggestions () {
       return this.ppaNameSuggestions.filter((option) => {
