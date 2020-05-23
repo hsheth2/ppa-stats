@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    <PackageSelection />
+    <PackageSelection
+      v-bind:ppaName.sync="ppaName"
+      v-bind:ppaOwner.sync="ppaOwner"
+      v-bind:packageName.sync="packageName"
+    />
   </div>
 </template>
 
@@ -10,6 +14,11 @@ import PackageSelection from '@/components/PackageSelection.vue'
 
 export default {
   name: 'Home',
+  data: () => ({
+    ppaName: '',
+    ppaOwner: '',
+    packageName: ''
+  }),
   components: {
     PackageSelection
   }

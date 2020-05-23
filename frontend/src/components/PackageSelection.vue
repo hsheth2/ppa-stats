@@ -5,7 +5,8 @@
         <div class="column">
           <b-field label="PPA Owner">
             <b-input
-                v-model="ppaOwner"
+                v-bind:value="ppaOwner"
+                v-on:input="$emit('update:ppaOwner', $event)"
                 placeholder="PPA owner">
             </b-input>
           </b-field>
@@ -14,13 +15,14 @@
         <div class="column">
           <b-field label="PPA Name">
             <b-autocomplete
-                v-model="ppaName"
+                v-bind:value="ppaName"
+                v-on:input="$emit('update:ppaName', $event)"
                 :loading="ppaNameSuggestionsLoading"
                 :data="filteredPpaNameSuggestions"
                 placeholder="PPA name"
-                open-on-focus
-                @select="option => ppaName = option">
-                <template slot="empty">No suggestions found</template>
+                open-on-focus>
+                <template v-if="ppaNameSuggestionsLoading" slot="empty">Loading suggestions...</template>
+                <template v-else slot="empty">No suggestions found</template>
             </b-autocomplete>
           </b-field>
         </div>
@@ -28,13 +30,14 @@
         <div class="column">
           <b-field label="Package Name">
             <b-autocomplete
-                v-model="packageName"
+                v-bind:value="packageName"
+                v-on:input="$emit('update:packageName', $event)"
                 :loading="packageSuggestionsLoading"
                 :data="filteredPackageSuggestions"
                 placeholder="Package name"
-                open-on-focus
-                @select="option => packageName = option">
-                <template slot="empty">No suggestions found</template>
+                open-on-focus>
+                <template v-if="packageSuggestionsLoading" slot="empty">Loading suggestions...</template>
+                <template v-else slot="empty">No suggestions found</template>
             </b-autocomplete>
           </b-field>
         </div>
@@ -48,15 +51,17 @@ import debounce from 'lodash/debounce'
 
 export default {
   name: 'PackageSelection',
+  props: {
+    ppaOwner: String,
+    ppaName: String,
+    packageName: String
+  },
   data () {
     return {
-      ppaOwner: '',
       ppaNameSuggestionsLoading: false,
       ppaNameSuggestions: [],
-      ppaName: '',
       packageSuggestionsLoading: false,
-      packageSuggestions: [],
-      packageName: ''
+      packageSuggestions: []
     }
   },
   computed: {
@@ -75,8 +80,12 @@ export default {
       })
     }
   },
-  watch: {
-    ppaOwner: debounce(function (ppaOwner) {
+  methods: {
+    updatePpaNameSuggestions: debounce(function (ppaOwner) {
+      if (!ppaOwner) {
+        this.ppaNameSuggestions = []
+        return
+      }
       this.ppaNameSuggestionsLoading = true
       this.$http.get(`/api/owner/${ppaOwner}/list_ppas`)
         .then(({ data }) => {
@@ -92,7 +101,11 @@ export default {
           this.ppaNameSuggestionsLoading = false
         })
     }, 500),
-    ppaName: debounce(function (ppaName) {
+    updatePackageNameSuggestions: debounce(function (ppaName) {
+      if (!ppaName) {
+        this.packageSuggestions = []
+        return
+      }
       this.packageSuggestionsLoading = true
       this.$http.get(`/api/owner/${this.ppaOwner}/ppa/${ppaName}/list_packages`)
         .then(({ data }) => {
@@ -109,7 +122,9 @@ export default {
         })
     }, 500)
   },
-  props: {
+  watch: {
+    ppaOwner: 'updatePpaNameSuggestions',
+    ppaName: 'updatePackageNameSuggestions'
   }
 }
 </script>
