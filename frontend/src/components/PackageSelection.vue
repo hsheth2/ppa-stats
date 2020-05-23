@@ -19,9 +19,8 @@
                 :data="filteredPpaNameSuggestions"
                 placeholder="PPA name"
                 open-on-focus
-                clearable
                 @select="option => ppaName = option">
-                <template slot="empty">No results found</template>
+                <template slot="empty">No suggestions found</template>
             </b-autocomplete>
           </b-field>
         </div>
@@ -34,9 +33,8 @@
                 :data="filteredPackageSuggestions"
                 placeholder="Package name"
                 open-on-focus
-                clearable
                 @select="option => packageName = option">
-                <template slot="empty">No results found</template>
+                <template slot="empty">No suggestions found</template>
             </b-autocomplete>
           </b-field>
         </div>
