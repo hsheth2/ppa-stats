@@ -4,7 +4,7 @@
       <b-field label="PPA Owner">
         <b-input
           :value="ppaOwner"
-          placeholder="PPA owner"
+          placeholder="e.g. hsheth2"
           @input="$emit('update:ppaOwner', $event)"
         >
         </b-input>
@@ -17,7 +17,7 @@
           :value="ppaName"
           :loading="ppaNameSuggestionsLoading"
           :data="filteredPpaNameSuggestions"
-          placeholder="PPA name"
+          placeholder="e.g. apps"
           open-on-focus
           @input="$emit('update:ppaName', $event)"
         >
@@ -35,7 +35,7 @@
           :value="packageName"
           :loading="packageSuggestionsLoading"
           :data="filteredPackageSuggestions"
-          placeholder="Package name"
+          placeholder="e.g. firefox"
           open-on-focus
           @input="$emit('update:packageName', $event)"
         >

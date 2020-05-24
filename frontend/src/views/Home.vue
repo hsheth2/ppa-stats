@@ -8,6 +8,8 @@
           :package-name.sync="packageName"
         />
 
+        <hr />
+
         <PackageStats
           :ppa-name="ppaName"
           :ppa-owner="ppaOwner"

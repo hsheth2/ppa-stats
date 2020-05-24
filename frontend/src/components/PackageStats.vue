@@ -1,18 +1,25 @@
 <template>
   <div v-if="loading">
-    Loading...
+    <b-message>
+      Loading...
+    </b-message>
+  </div>
+  <div v-else-if="error">
+    <b-message type="is-error">
+      Failed to load download statistics for {{ packageName }} in {{ ppa }}.
+    </b-message>
   </div>
   <div v-else-if="packageSelected">
-    <h1 class="title is-3">
-      ppa:{{ ppaOwner }}/{{ ppaName }} - {{ packageName }}
-    </h1>
+    <h1 class="title is-3">{{ ppa }} - {{ packageName }}</h1>
 
     <PackageStatsSummary :data="data" />
 
     <pre>{{ data }}</pre>
   </div>
   <div v-else>
-    Please select a package.
+    <b-message>
+      Please select a package.
+    </b-message>
   </div>
 </template>
 
@@ -32,11 +39,15 @@ export default {
   },
   data: () => ({
     loading: false,
+    error: false,
     data: [],
   }),
   computed: {
     packageSelected() {
       return this.ppaOwner && this.ppaName && this.packageName;
+    },
+    ppa() {
+      return `ppa:${this.ppaOwner}/${this.ppaName}`;
     },
   },
   watch: {
@@ -52,6 +63,7 @@ export default {
       function () {
         if (!this.packageSelected) {
           this.data = [];
+          this.error = false;
           return;
         }
         this.loading = true;
@@ -60,13 +72,14 @@ export default {
             `/api/owner/${this.ppaOwner}/ppa/${this.ppaName}/package/${this.packageName}/downloads`
           )
           .then(({ data }) => {
-            this.data = [];
+            this.data = data;
+            this.error = false;
             console.log(data);
-            data.forEach((item) => this.data.push(item));
           })
           .catch((err) => {
             console.log(err);
             this.data = [];
+            this.error = true;
           })
           .finally(() => {
             this.loading = false;
