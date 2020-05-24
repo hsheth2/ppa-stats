@@ -93,6 +93,10 @@ export default {
     ppaOwner: 'updatePpaNameSuggestions',
     ppaName: 'updatePackageNameSuggestions',
   },
+  created() {
+    this.updatePpaNameSuggestions();
+    this.updatePackageNameSuggestions();
+  },
   methods: {
     updatePpaNameSuggestions: debounce(function (ppaOwner) {
       if (!ppaOwner) {
