@@ -1,16 +1,20 @@
 <template>
   <div class="home">
-    <PackageSelection
-      :ppa-name.sync="ppaName"
-      :ppa-owner.sync="ppaOwner"
-      :package-name.sync="packageName"
-    />
+    <div class="section">
+      <div class="container">
+        <PackageSelection
+          :ppa-name.sync="ppaName"
+          :ppa-owner.sync="ppaOwner"
+          :package-name.sync="packageName"
+        />
 
-    <PackageStats
-      :ppa-name="ppaName"
-      :ppa-owner="ppaOwner"
-      :package-name="packageName"
-    />
+        <PackageStats
+          :ppa-name="ppaName"
+          :ppa-owner="ppaOwner"
+          :package-name="packageName"
+        />
+      </div>
+    </div>
   </div>
 </template>
 

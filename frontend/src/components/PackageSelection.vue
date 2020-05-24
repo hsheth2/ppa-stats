@@ -1,54 +1,50 @@
 <template>
-  <div class="section">
-    <div class="container">
-      <div class="columns">
-        <div class="column">
-          <b-field label="PPA Owner">
-            <b-input
-              :value="ppaOwner"
-              placeholder="PPA owner"
-              @input="$emit('update:ppaOwner', $event)"
-            >
-            </b-input>
-          </b-field>
-        </div>
+  <div class="columns">
+    <div class="column">
+      <b-field label="PPA Owner">
+        <b-input
+          :value="ppaOwner"
+          placeholder="PPA owner"
+          @input="$emit('update:ppaOwner', $event)"
+        >
+        </b-input>
+      </b-field>
+    </div>
 
-        <div class="column">
-          <b-field label="PPA Name">
-            <b-autocomplete
-              :value="ppaName"
-              :loading="ppaNameSuggestionsLoading"
-              :data="filteredPpaNameSuggestions"
-              placeholder="PPA name"
-              open-on-focus
-              @input="$emit('update:ppaName', $event)"
-            >
-              <template v-if="ppaNameSuggestionsLoading" slot="empty"
-                >Loading suggestions...</template
-              >
-              <template v-else slot="empty">No suggestions found</template>
-            </b-autocomplete>
-          </b-field>
-        </div>
+    <div class="column">
+      <b-field label="PPA Name">
+        <b-autocomplete
+          :value="ppaName"
+          :loading="ppaNameSuggestionsLoading"
+          :data="filteredPpaNameSuggestions"
+          placeholder="PPA name"
+          open-on-focus
+          @input="$emit('update:ppaName', $event)"
+        >
+          <template v-if="ppaNameSuggestionsLoading" slot="empty"
+            >Loading suggestions...</template
+          >
+          <template v-else slot="empty">No suggestions found</template>
+        </b-autocomplete>
+      </b-field>
+    </div>
 
-        <div class="column">
-          <b-field label="Package Name">
-            <b-autocomplete
-              :value="packageName"
-              :loading="packageSuggestionsLoading"
-              :data="filteredPackageSuggestions"
-              placeholder="Package name"
-              open-on-focus
-              @input="$emit('update:packageName', $event)"
-            >
-              <template v-if="packageSuggestionsLoading" slot="empty"
-                >Loading suggestions...</template
-              >
-              <template v-else slot="empty">No suggestions found</template>
-            </b-autocomplete>
-          </b-field>
-        </div>
-      </div>
+    <div class="column">
+      <b-field label="Package Name">
+        <b-autocomplete
+          :value="packageName"
+          :loading="packageSuggestionsLoading"
+          :data="filteredPackageSuggestions"
+          placeholder="Package name"
+          open-on-focus
+          @input="$emit('update:packageName', $event)"
+        >
+          <template v-if="packageSuggestionsLoading" slot="empty"
+            >Loading suggestions...</template
+          >
+          <template v-else slot="empty">No suggestions found</template>
+        </b-autocomplete>
+      </b-field>
     </div>
   </div>
 </template>
@@ -90,12 +86,14 @@ export default {
     },
   },
   watch: {
-    ppaOwner: 'updatePpaNameSuggestions',
-    ppaName: 'updatePackageNameSuggestions',
-  },
-  created() {
-    this.updatePpaNameSuggestions();
-    this.updatePackageNameSuggestions();
+    ppaOwner: {
+      handler: 'updatePpaNameSuggestions',
+      immediate: true,
+    },
+    ppaName: {
+      handler: 'updatePackageNameSuggestions',
+      immediate: true,
+    },
   },
   methods: {
     updatePpaNameSuggestions: debounce(function (ppaOwner) {

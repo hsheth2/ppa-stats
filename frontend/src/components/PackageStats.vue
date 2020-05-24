@@ -1,27 +1,30 @@
 <template>
-  <div class="section">
-    <div class="container">
-      <div v-if="loading">
-        Loading...
-      </div>
-      <div v-else-if="packageSelected">
-        have some data
-        <pre>
-          {{ data }}
-        </pre>
-      </div>
-      <div v-else>
-        Please select a package.
-      </div>
-    </div>
+  <div v-if="loading">
+    Loading...
+  </div>
+  <div v-else-if="packageSelected">
+    <h1 class="title is-3">
+      ppa:{{ ppaOwner }}/{{ ppaName }} - {{ packageName }}
+    </h1>
+
+    <PackageStatsSummary :data="data" />
+
+    <pre>{{ data }}</pre>
+  </div>
+  <div v-else>
+    Please select a package.
   </div>
 </template>
 
 <script>
 import debounce from 'lodash/debounce';
+import PackageStatsSummary from '@/components/PackageStatsSummary.vue';
 
 export default {
   name: 'PackageStats',
+  components: {
+    PackageStatsSummary,
+  },
   props: {
     ppaOwner: { type: String, required: true },
     ppaName: { type: String, required: true },
@@ -45,29 +48,36 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchData: debounce(function () {
-      if (!this.packageSelected) {
-        this.data = [];
-        return;
+    fetchData: debounce(
+      function () {
+        if (!this.packageSelected) {
+          this.data = [];
+          return;
+        }
+        this.loading = true;
+        this.$http
+          .get(
+            `/api/owner/${this.ppaOwner}/ppa/${this.ppaName}/package/${this.packageName}/downloads`
+          )
+          .then(({ data }) => {
+            this.data = [];
+            console.log(data);
+            data.forEach((item) => this.data.push(item));
+          })
+          .catch((err) => {
+            console.log(err);
+            this.data = [];
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      },
+      500,
+      {
+        leading: true,
+        trailing: true,
       }
-      this.loading = true;
-      this.$http
-        .get(
-          `/api/owner/${this.ppaOwner}/ppa/${this.ppaName}/package/${this.packageName}/downloads`
-        )
-        .then(({ data }) => {
-          this.data = [];
-          console.log(data);
-          data.forEach((item) => this.data.push(item));
-        })
-        .catch((err) => {
-          console.log(err);
-          this.data = [];
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    }, 500),
+    ),
   },
 };
 </script>
