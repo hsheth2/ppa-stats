@@ -1,12 +1,11 @@
 <template>
   <div v-if="loading">
-    <b-message>
-      Loading...
-    </b-message>
+    <b-message>Loading...</b-message>
   </div>
   <div v-else-if="error">
-    <b-message type="is-error">
-      Failed to load download statistics for {{ packageName }} in {{ ppa }}.
+    <b-message type="is-danger">
+      Failed to load download statistics for {{ packageName }} in {{ ppa }}. Try
+      reloading the page.
     </b-message>
   </div>
   <div v-else-if="packageSelected">
@@ -14,23 +13,27 @@
 
     <PackageStatsSummary :data="data" />
 
+    <div>
+      <PackageDownloadsHistory :data="data" />
+    </div>
+
     <pre>{{ data }}</pre>
   </div>
   <div v-else>
-    <b-message>
-      Please select a package.
-    </b-message>
+    <b-message>Please select a package.</b-message>
   </div>
 </template>
 
 <script>
 import debounce from 'lodash/debounce';
 import PackageStatsSummary from '@/components/PackageStatsSummary.vue';
+import PackageDownloadsHistory from '@/components/PackageDownloadsHistory.vue';
 
 export default {
   name: 'PackageStats',
   components: {
     PackageStatsSummary,
+    PackageDownloadsHistory,
   },
   props: {
     ppaOwner: { type: String, required: true },
