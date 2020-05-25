@@ -18,7 +18,7 @@ import PackageSelection from '@/components/PackageSelection.vue';
 import PackageStats from '@/components/PackageStats.vue';
 
 export default {
-  name: 'Home',
+  name: 'Main',
   components: {
     PackageSelection,
     PackageStats,
@@ -29,15 +29,25 @@ export default {
       ppaOwner: '',
       packageName: '',
     },
-    selection: {
-      ppaName: '',
-      ppaOwner: '',
-      packageName: '',
-    },
   }),
+  computed: {
+    selection() {
+      return {
+        ppaName: this.$route.query.ppaName || '',
+        ppaOwner: this.$route.query.ppaOwner || '',
+        packageName: this.$route.query.packageName || '',
+      };
+    },
+  },
+  created() {
+    Object.assign(this.input, this.selection);
+  },
   methods: {
     handleSelect() {
-      this.selection = this.input;
+      this.$router.replace({
+        name: 'main',
+        query: this.input,
+      });
     },
   },
 };
