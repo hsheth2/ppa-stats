@@ -14,7 +14,7 @@
     </div>
     <div class="level-item has-text-centered">
       <div>
-        <p class="heading">Versions</p>
+        <p class="heading">Published Versions</p>
         <p class="title">{{ versions }}</p>
       </div>
     </div>

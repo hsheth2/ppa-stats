@@ -26,12 +26,19 @@ def get_binary_info(binary):
     daily = collections.defaultdict(lambda: 0)
     for downloads in daily_downloads:
         daily[downloads.day.date()] += downloads.count
+    
+    # e.g. 'cava 0.6.1-2-1 in bionic amd64'
+    attrs = binary.display_name.strip().split(' ')
+    assert attrs[1] == binary.binary_package_version
 
     info = {
-        'display_name': binary.display_name,
+        #'display_name': binary.display_name,
+        'package': attrs[0],
         'version': binary.binary_package_version,
         #'architecture_specific': binary.architecture_specific,
-        'distro_arch_series_link': binary.distro_arch_series_link,
+        #'distro_arch_series_link': binary.distro_arch_series_link,
+        'distro': attrs[3],
+        'arch': attrs[4],
         'total_downloads': binary.getDownloadCount(),
         'daily_downloads': dict(daily),
     }

@@ -73,6 +73,11 @@ export default {
       };
     },
   },
+  watch: {
+    chartData: function () {
+      this.renderChart(this.chartData, this.options);
+    },
+  },
   mounted() {
     this.renderChart(this.chartData, this.options);
   },

@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "ppa-download-stats",
   "version": "0.1.0",
   "private": true,
   "scripts": {

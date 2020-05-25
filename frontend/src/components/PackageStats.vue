@@ -9,15 +9,17 @@
     </b-message>
   </div>
   <div v-else-if="packageSelected">
-    <h1 class="title is-3">{{ ppa }} - {{ packageName }}</h1>
+    <h3 class="title is-3">{{ ppa }} - {{ packageName }}</h3>
 
     <PackageStatsSummary :data="data" />
 
-    <div>
+    <h4 class="is-size-4">Daily Downloads</h4>
+    <div class="space-bottom">
       <PackageDownloadsHistory :data="data" />
     </div>
 
-    <pre>{{ data }}</pre>
+    <h4 class="is-size-4">Downloads by Version, Distro, and Architecture</h4>
+    <b-table :data="data" :columns="columns" :striped="true" />
   </div>
   <div v-else>
     <b-message>Please select a package.</b-message>
@@ -28,6 +30,35 @@
 import debounce from 'lodash/debounce';
 import PackageStatsSummary from '@/components/PackageStatsSummary.vue';
 import PackageDownloadsHistory from '@/components/PackageDownloadsHistory.vue';
+
+const columns = [
+  {
+    field: 'package',
+    label: 'Package',
+    sortable: true,
+  },
+  {
+    field: 'version',
+    label: 'Version',
+    sortable: true,
+  },
+  {
+    field: 'distro',
+    label: 'Distribution',
+    sortable: true,
+  },
+  {
+    field: 'arch',
+    label: 'Architecture',
+    sortable: true,
+  },
+  {
+    field: 'total_downloads',
+    label: 'Total Downloads',
+    sortable: true,
+    numeric: true,
+  },
+];
 
 export default {
   name: 'PackageStats',
@@ -44,6 +75,7 @@ export default {
     loading: false,
     error: false,
     data: [],
+    columns: columns,
   }),
   computed: {
     packageSelected() {
@@ -99,4 +131,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+.space-bottom {
+  margin-bottom: 1.5em;
+}
+</style>
