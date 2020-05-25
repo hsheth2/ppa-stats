@@ -18,7 +18,7 @@
       <PackageDownloadsHistory :data="data" />
     </div>
 
-    <h4 class="is-size-4">Downloads by Version, Distro, and Architecture</h4>
+    <h4 class="is-size-4">Detailed Downloads History</h4>
     <b-table :data="data" :columns="columns" :striped="true" />
   </div>
   <div v-else>

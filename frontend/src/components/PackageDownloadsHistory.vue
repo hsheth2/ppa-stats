@@ -55,19 +55,21 @@ export default {
         }
         date.add(1, 'days');
       }
-      console.log(downloads);
+
+      // Sort downloads by date.
+      const sortedDownloads = Object.entries(downloads);
+      sortedDownloads.sort((a, b) => a[0] - b[0]);
+      console.log(sortedDownloads);
 
       // Transform into Chart.js format.
       return {
         datasets: [
           {
             label: 'Downloads',
-            data: Object.entries(downloads)
-              .sort((a, b) => a[0] - b[0])
-              .map((entry) => ({
-                t: entry[0],
-                y: entry[1],
-              })),
+            data: sortedDownloads.map((entry) => ({
+              t: entry[0],
+              y: entry[1],
+            })),
           },
         ],
       };
