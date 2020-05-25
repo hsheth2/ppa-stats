@@ -1,5 +1,9 @@
 # ppa-stats-web
 
+TODO
+- add search button
+- match query with hash router to allow for direct linking
+- cut out backend API and query launchpad directly
 
 ## References
 - https://launchpad.net/+apidoc/1.0.html

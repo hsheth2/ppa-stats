@@ -83,10 +83,11 @@ export default {
           return Promise.resolve([]);
         }
         return this.$http
-          .get(`/api/owner/${ppaOwner}/list_ppas`)
+          .get(`/lp-api/1.0/~${ppaOwner}/ppas`)
           .then((response) => {
-            console.log(response.data);
-            return response.data;
+            const ppas = response.data.entries.map((entry) => entry.name);
+            console.log(ppas);
+            return ppas;
           });
       }, 500),
       watch: ['ppaOwner'],
@@ -99,10 +100,16 @@ export default {
           return Promise.resolve([]);
         }
         return this.$http
-          .get(`/api/owner/${ppaOwner}/ppa/${ppaName}/list_packages`)
-          .then(({ data }) => {
-            console.log(data);
-            return data;
+          .get(
+            `/lp-api/1.0/~${ppaOwner}/+archive/${ppaName}?ws.op=getPublishedBinaries`
+          )
+          .then((response) => {
+            const binaries = response.data.entries;
+            const packages = new Set(
+              binaries.map((binary) => binary.binary_package_name)
+            );
+            console.log(packages);
+            return [...packages];
           });
       }, 500),
       watch: ['ppaOwner', 'ppaName'],

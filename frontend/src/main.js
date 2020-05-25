@@ -11,7 +11,12 @@ import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
 
 Vue.use(Buefy);
-Vue.use(VueAxios, axios);
+Vue.use(
+  VueAxios,
+  axios.create({
+    baseURL: '/',
+  })
+);
 Vue.use(AsyncComputed);
 Vue.config.productionTip = false;
 
