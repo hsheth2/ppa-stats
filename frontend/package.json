@@ -11,6 +11,7 @@
     "buefy": "^0.8.19",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
+    "moment": "^2.26.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-resource": "^1.5.1",

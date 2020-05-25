@@ -1,4 +1,5 @@
 <script>
+import moment from 'moment';
 import VueCharts from 'vue-chartjs';
 
 export default {
@@ -18,6 +19,7 @@ export default {
         xAxes: [
           {
             type: 'time',
+            distribution: 'series',
             time: {
               round: 'day',
               minUnit: 'day',
@@ -34,7 +36,7 @@ export default {
 
       for (const binary of this.data) {
         for (const [rawDate, count] of Object.entries(binary.daily_downloads)) {
-          const date = new Date(rawDate);
+          const date = moment(rawDate, 'YYYY-MM-DD', true);
           if (!(date in downloads)) {
             downloads[date] = 0;
           }
@@ -46,13 +48,14 @@ export default {
       const dates = Object.keys(downloads);
       const startDate = Math.min(...dates);
       const endDate = Math.max(...dates);
-      let date = startDate;
+      let date = moment(startDate);
       while (date <= endDate) {
         if (!(date in downloads)) {
           downloads[date] = 0;
         }
-        date.setDate(date.getDate() + 1);
+        date.add(1, 'days');
       }
+      console.log(downloads);
 
       // Transform into Chart.js format.
       return {
