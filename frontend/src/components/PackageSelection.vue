@@ -6,8 +6,7 @@
           :value="ppaOwner"
           placeholder="e.g. hsheth2"
           @input="$emit('update:ppaOwner', $event)"
-        >
-        </b-input>
+        ></b-input>
       </b-field>
     </div>
 
@@ -43,6 +42,12 @@
           </template>
         </b-autocomplete>
       </b-field>
+    </div>
+
+    <div class="column">
+      <b-button class="space-on-top" @click="$emit('selectPackage')"
+        >Get Statistics</b-button
+      >
     </div>
   </div>
 </template>
@@ -130,4 +135,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+.space-on-top {
+  margin-top: 2em;
+}
+</style>

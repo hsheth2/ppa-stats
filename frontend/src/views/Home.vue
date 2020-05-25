@@ -2,19 +2,11 @@
   <div class="home">
     <div class="section">
       <div class="container">
-        <PackageSelection
-          :ppa-name.sync="ppaName"
-          :ppa-owner.sync="ppaOwner"
-          :package-name.sync="packageName"
-        />
+        <PackageSelection v-bind.sync="input" @selectPackage="handleSelect" />
 
         <hr />
 
-        <PackageStats
-          :ppa-name="ppaName"
-          :ppa-owner="ppaOwner"
-          :package-name="packageName"
-        />
+        <PackageStats v-bind="selection" />
       </div>
     </div>
   </div>
@@ -32,9 +24,21 @@ export default {
     PackageStats,
   },
   data: () => ({
-    ppaName: '',
-    ppaOwner: '',
-    packageName: '',
+    input: {
+      ppaName: '',
+      ppaOwner: '',
+      packageName: '',
+    },
+    selection: {
+      ppaName: '',
+      ppaOwner: '',
+      packageName: '',
+    },
   }),
+  methods: {
+    handleSelect() {
+      this.selection = this.input;
+    },
+  },
 };
 </script>
