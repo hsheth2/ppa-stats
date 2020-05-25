@@ -3,12 +3,14 @@ import App from './App.vue';
 import router from './router';
 
 import VueResource from 'vue-resource';
+import AsyncComputed from 'vue-async-computed';
 
 import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
 
 Vue.use(Buefy);
 Vue.use(VueResource);
+Vue.use(AsyncComputed);
 Vue.config.productionTip = false;
 
 new Vue({

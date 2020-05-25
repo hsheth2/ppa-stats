@@ -15,16 +15,15 @@
       <b-field label="PPA Name">
         <b-autocomplete
           :value="ppaName"
-          :loading="ppaNameSuggestionsLoading"
+          :loading="$asyncComputed.ppaNameSuggestions.updating"
           :data="filteredPpaNameSuggestions"
           placeholder="e.g. apps"
           open-on-focus
           @input="$emit('update:ppaName', $event)"
         >
-          <template v-if="ppaNameSuggestionsLoading" slot="empty"
-            >Loading suggestions...</template
-          >
-          <template v-else slot="empty">No suggestions found</template>
+          <template slot="empty">
+            {{ textForSuggestion($asyncComputed.ppaNameSuggestions.state) }}
+          </template>
         </b-autocomplete>
       </b-field>
     </div>
@@ -33,16 +32,15 @@
       <b-field label="Package Name">
         <b-autocomplete
           :value="packageName"
-          :loading="packageSuggestionsLoading"
+          :loading="$asyncComputed.packageSuggestions.updating"
           :data="filteredPackageSuggestions"
           placeholder="e.g. firefox"
           open-on-focus
           @input="$emit('update:packageName', $event)"
         >
-          <template v-if="packageSuggestionsLoading" slot="empty"
-            >Loading suggestions...</template
-          >
-          <template v-else slot="empty">No suggestions found</template>
+          <template slot="empty">
+            {{ textForSuggestion($asyncComputed.packageSuggestions.state) }}
+          </template>
         </b-autocomplete>
       </b-field>
     </div>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
+const debounce = require('debounce-promise');
 
 export default {
   name: 'PackageSelection',
@@ -59,24 +57,16 @@ export default {
     ppaName: { type: String, required: true },
     packageName: { type: String, required: true },
   },
-  data() {
-    return {
-      ppaNameSuggestionsLoading: false,
-      ppaNameSuggestions: [],
-      packageSuggestionsLoading: false,
-      packageSuggestions: [],
-    };
-  },
   computed: {
     filteredPpaNameSuggestions() {
-      return this.ppaNameSuggestions.filter((option) => {
+      return (this.ppaNameSuggestions || []).filter((option) => {
         return (
           option.toLowerCase().indexOf((this.ppaName || '').toLowerCase()) >= 0
         );
       });
     },
     filteredPackageSuggestions() {
-      return this.packageSuggestions.filter((option) => {
+      return (this.packageSuggestions || []).filter((option) => {
         return (
           option
             .toLowerCase()
@@ -85,59 +75,49 @@ export default {
       });
     },
   },
-  watch: {
-    ppaOwner: {
-      handler: 'updatePpaNameSuggestions',
-      immediate: true,
+  asyncComputed: {
+    ppaNameSuggestions: {
+      get: debounce(function () {
+        const ppaOwner = this.ppaOwner;
+        if (!ppaOwner) {
+          return Promise.resolve([]);
+        }
+        return this.$http
+          .get(`/api/owner/${ppaOwner}/list_ppas`)
+          .then((response) => {
+            console.log(response.data);
+            return response.data;
+          });
+      }, 500),
+      watch: ['ppaOwner'],
     },
-    ppaName: {
-      handler: 'updatePackageNameSuggestions',
-      immediate: true,
+    packageSuggestions: {
+      get: debounce(function () {
+        const ppaOwner = this.ppaOwner;
+        const ppaName = this.ppaName;
+        if (!ppaOwner || !ppaName) {
+          return Promise.resolve([]);
+        }
+        return this.$http
+          .get(`/api/owner/${ppaOwner}/ppa/${ppaName}/list_packages`)
+          .then(({ data }) => {
+            console.log(data);
+            return data;
+          });
+      }, 500),
+      watch: ['ppaOwner', 'ppaName'],
     },
   },
   methods: {
-    updatePpaNameSuggestions: debounce(function (ppaOwner) {
-      if (!ppaOwner) {
-        this.ppaNameSuggestions = [];
-        return;
+    textForSuggestion(state) {
+      if (state === 'updating') {
+        return 'Loading suggestions...';
+      } else if (state === 'success') {
+        return 'No suggestions found.';
+      } else {
+        return 'Unable to load suggestions.';
       }
-      this.ppaNameSuggestionsLoading = true;
-      this.$http
-        .get(`/api/owner/${ppaOwner}/list_ppas`)
-        .then(({ data }) => {
-          this.ppaNameSuggestions = [];
-          console.log(data);
-          data.forEach((item) => this.ppaNameSuggestions.push(item));
-        })
-        .catch((err) => {
-          console.log(err);
-          this.ppaNameSuggestions = [];
-        })
-        .finally(() => {
-          this.ppaNameSuggestionsLoading = false;
-        });
-    }, 500),
-    updatePackageNameSuggestions: debounce(function (ppaName) {
-      if (!ppaName) {
-        this.packageSuggestions = [];
-        return;
-      }
-      this.packageSuggestionsLoading = true;
-      this.$http
-        .get(`/api/owner/${this.ppaOwner}/ppa/${ppaName}/list_packages`)
-        .then(({ data }) => {
-          this.packageSuggestions = [];
-          console.log(data);
-          data.forEach((item) => this.packageSuggestions.push(item));
-        })
-        .catch((err) => {
-          console.log(err);
-          this.packageSuggestions = [];
-        })
-        .finally(() => {
-          this.packageSuggestionsLoading = false;
-        });
-    }, 500),
+    },
   },
 };
 </script>
