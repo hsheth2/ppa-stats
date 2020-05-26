@@ -42,7 +42,7 @@ export default {
     versions() {
       const versions = new Set();
       for (const binary of this.data) {
-        versions.add(binary.version);
+        versions.add(binary.binary_package_version);
       }
       return versions.size;
     },

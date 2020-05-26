@@ -41,12 +41,12 @@ import PackageDownloadsHistory from '@/components/PackageDownloadsHistory.vue';
 
 const columns = [
   {
-    field: 'package',
+    field: 'binary_package_name',
     label: 'Package',
     sortable: true,
   },
   {
-    field: 'version',
+    field: 'binary_package_version',
     label: 'Version',
     sortable: true,
   },
@@ -135,10 +135,17 @@ export default {
         )
       ).data.entries;
 
-      // Only fetch downloads for binaries not copied from elsewhere.
-      const binaries = allBinaries.filter(
-        (entry) => !entry.copied_from_archive_link
-      );
+      // Deduplication. Each binary is produced by a build, and then optionally copied
+      // to a variety of different distribution lists.
+      const buildLinks = new Set();
+      const binaries = allBinaries.filter((entry) => {
+        const buildLink = entry.build_link;
+        if (buildLinks.has(buildLink)) {
+          return false;
+        }
+        buildLinks.add(buildLink);
+        return true;
+      });
 
       let resolved = 0;
       const data = await Promise.all(
@@ -171,16 +178,11 @@ export default {
       const arch = info[4];
 
       const binary = {
-        package: entry.binary_package_name,
-        display_name: entry.display_name,
-        status: entry.status,
-        build_link: entry.build_link,
-        binary_link: entry.self_link,
-        version: entry.binary_package_version,
         distro,
         arch,
         total_downloads,
         daily_downloads,
+        ...entry,
       };
       return binary;
     },
