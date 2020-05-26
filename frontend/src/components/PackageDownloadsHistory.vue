@@ -44,8 +44,8 @@ export default {
       for (const binary of this.data) {
         for (const [rawDate, count] of Object.entries(binary.daily_downloads)) {
           const date = moment(rawDate, 'YYYY-MM-DD', true);
-          dates.push(date);
           if (!(date in downloads)) {
+            dates.push(date);
             downloads[date] = 0;
           }
           downloads[date] += count;
