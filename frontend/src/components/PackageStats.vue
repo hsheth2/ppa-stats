@@ -1,6 +1,15 @@
 <template>
   <div v-if="loading">
+    <h3 class="title is-3">{{ ppa }} - {{ packageName }}</h3>
+
     <b-message>Loading...</b-message>
+    <b-progress
+      :value="progress"
+      type="is-info"
+      size="is-large"
+      show-value
+      format="percent"
+    ></b-progress>
   </div>
   <div v-else-if="error">
     <b-message type="is-danger">
@@ -76,8 +85,11 @@ export default {
     packageName: { type: String, required: true },
   },
   data: () => ({
-    progress: 0,
     columns: columns,
+    data: [],
+    loading: false,
+    error: false,
+    progress: 0,
   }),
   computed: {
     packageSelected() {
@@ -86,16 +98,33 @@ export default {
     ppa() {
       return `ppa:${this.ppaOwner}/${this.ppaName}`;
     },
-    loading() {
-      return this.$asyncComputed.data.updating;
-    },
-    error() {
-      return this.$asyncComputed.data.error;
-    },
   },
-  asyncComputed: {
-    async data() {
-      //this.progress = 0;
+  watch: {
+    ppaOwner: 'fetchData',
+    ppaName: 'fetchData',
+    packageName: 'fetchData',
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.loading = true;
+      this.error = false;
+      this.resolveData()
+        .then((data) => {
+          this.data = data;
+        })
+        .catch((err) => {
+          console.error(err);
+          this.error = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    async resolveData() {
+      this.progress = 0;
       if (!this.packageSelected) {
         return Promise.resolve([]);
       }
@@ -110,18 +139,19 @@ export default {
       const binaries = allBinaries.filter(
         (entry) => !entry.copied_from_archive_link
       );
-      console.log(binaries);
 
-      // testing: change this -- only get first binary
-      // return [await this.resolveBinary(binaries[0])];
-
+      let resolved = 0;
       const data = await Promise.all(
-        binaries.map((entry) => this.resolveBinary(entry))
+        binaries.map((entry) =>
+          this.resolveBinary(entry).finally(() => {
+            resolved += 1;
+            this.progress = (resolved / binaries.length) * 100;
+          })
+        )
       );
+      console.log(data);
       return data;
     },
-  },
-  methods: {
     async resolveBinary(entry) {
       // e.g. self_link: https://api.launchpad.net/1.0/~hsheth2/+archive/ubuntu/ppa/+binarypub/142073665
       const binaryPubId = entry.self_link.split('/').pop();
