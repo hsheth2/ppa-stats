@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  frontend:
+    build: frontend
+    restart: always
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ppa-stats-frontend.rule: Host(`ppa-stats.sheth.io`)
+      traefik.http.routers.ppa-stats-frontend.tls: true
+      traefik.http.routers.ppa-stats-frontend.middlewares: SecureTLS
+    networks:
+       - traefik
+       - default
+  lp-proxy:
+    build: lp-proxy
+    restart: always
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ppa-stats-lp-proxy.rule: "Host(`ppa-stats.sheth.io`) && PathPrefix(`/lp-api`)"
+      traefik.http.routers.ppa-stats-lp-proxy.tls: true
+      traefik.http.routers.ppa-stats-lp-proxy.middlewares: SecureTLS
+    networks:
+       - traefik
+       - default
+
+networks:
+  traefik:
+    external: true
