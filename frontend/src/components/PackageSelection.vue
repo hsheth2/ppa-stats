@@ -98,24 +98,29 @@ export default {
       watch: ['ppaOwner'],
     },
     packageSuggestions: {
-      get: debounce(function () {
+      get: debounce(async function () {
         const ppaOwner = this.ppaOwner;
         const ppaName = this.ppaName;
         if (!ppaOwner || !ppaName) {
-          return Promise.resolve([]);
+          return [];
         }
-        return this.$http
-          .get(
-            `/lp-api/1.0/~${ppaOwner}/+archive/${ppaName}?ws.op=getPublishedBinaries`
-          )
-          .then((response) => {
-            const binaries = response.data.entries;
-            const packages = new Set(
-              binaries.map((binary) => binary.binary_package_name)
-            );
-            console.log(packages);
-            return [...packages];
-          });
+
+        let binaries = [];
+        let nextLink = `/lp-api/1.0/~${ppaOwner}/+archive/${ppaName}?ws.op=getPublishedBinaries`;
+        while (nextLink) {
+          const response = await this.$http.get(nextLink);
+          binaries = binaries.concat(response.data.entries);
+          nextLink = (response.data.next_collection_link || '').replace(
+            'https://api.launchpad.net',
+            '/lp-api'
+          );
+        }
+
+        const packages = new Set(
+          binaries.map((binary) => binary.binary_package_name)
+        );
+        console.log(packages);
+        return [...packages];
       }, 500),
       watch: ['ppaOwner', 'ppaName'],
     },
