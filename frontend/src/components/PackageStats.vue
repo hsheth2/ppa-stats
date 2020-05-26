@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
 import PackageStatsSummary from '@/components/PackageStatsSummary.vue';
 import PackageDownloadsHistory from '@/components/PackageDownloadsHistory.vue';
 
@@ -53,6 +52,11 @@ const columns = [
     sortable: true,
   },
   {
+    field: 'status',
+    label: 'Status',
+    sortable: true,
+  },
+  {
     field: 'total_downloads',
     label: 'Total Downloads',
     sortable: true,
@@ -72,9 +76,7 @@ export default {
     packageName: { type: String, required: true },
   },
   data: () => ({
-    loading: false,
-    error: false,
-    data: [],
+    progress: 0,
     columns: columns,
   }),
   computed: {
@@ -84,48 +86,76 @@ export default {
     ppa() {
       return `ppa:${this.ppaOwner}/${this.ppaName}`;
     },
+    loading() {
+      return this.$asyncComputed.data.updating;
+    },
+    error() {
+      return this.$asyncComputed.data.error;
+    },
   },
-  watch: {
-    ppaOwner: 'fetchData',
-    ppaName: 'fetchData',
-    packageName: 'fetchData',
-  },
-  created() {
-    this.fetchData();
+  asyncComputed: {
+    async data() {
+      //this.progress = 0;
+      if (!this.packageSelected) {
+        return Promise.resolve([]);
+      }
+
+      const allBinaries = (
+        await this.$http.get(
+          `/lp-api/1.0/~${this.ppaOwner}/+archive/${this.ppaName}?ws.op=getPublishedBinaries&binary_name=${this.packageName}&exact_match=true`
+        )
+      ).data.entries;
+
+      // Only fetch downloads for binaries not copied from elsewhere.
+      const binaries = allBinaries.filter(
+        (entry) => !entry.copied_from_archive_link
+      );
+      console.log(binaries);
+
+      // TODO: change this -- only get first binary
+      return [await this.resolveBinary(binaries[0])];
+
+      /*
+      const data = await Promise.all(
+        binaries.map((entry) => this.resolveBinary(entry))
+      );
+      return data;
+      */
+    },
   },
   methods: {
-    fetchData: debounce(
-      function () {
-        if (!this.packageSelected) {
-          this.data = [];
-          this.error = false;
-          return;
-        }
-        this.loading = true;
-        this.$http
-          .get(
-            `/api/owner/${this.ppaOwner}/ppa/${this.ppaName}/package/${this.packageName}/downloads`
-          )
-          .then(({ data }) => {
-            this.data = data;
-            this.error = false;
-            console.log(data);
-          })
-          .catch((err) => {
-            console.log(err);
-            this.data = [];
-            this.error = true;
-          })
-          .finally(() => {
-            this.loading = false;
-          });
-      },
-      500,
-      {
-        leading: true,
-        trailing: true,
-      }
-    ),
+    async resolveBinary(entry) {
+      // e.g. self_link: https://api.launchpad.net/1.0/~hsheth2/+archive/ubuntu/ppa/+binarypub/142073665
+      const binaryPubId = entry.self_link.split('/').pop();
+      const daily_downloads = (
+        await this.$http.get(
+          `/lp-api/1.0/~${this.ppaOwner}/+archive/ubuntu/${this.ppaName}/+binarypub/${binaryPubId}?ws.op=getDailyDownloadTotals`
+        )
+      ).data;
+      const total_downloads = Object.values(daily_downloads).reduce(
+        (a, b) => a + b,
+        0
+      );
+
+      // e.g. "cava 0.6.1-0-1 in bionic i386"
+      const info = entry.display_name.split(' ');
+      const distro = info[3];
+      const arch = info[4];
+
+      const binary = {
+        package: entry.binary_package_name,
+        display_name: entry.display_name,
+        status: entry.status,
+        build_link: entry.build_link,
+        binary_link: entry.self_link,
+        version: entry.binary_package_version,
+        distro,
+        arch,
+        total_downloads,
+        daily_downloads,
+      };
+      return binary;
+    },
   },
 };
 </script>

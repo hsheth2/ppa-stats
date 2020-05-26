@@ -27,16 +27,24 @@ export default {
             },
           },
         ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
       },
     },
   }),
   computed: {
     chartData() {
+      const dates = [];
       const downloads = {};
-
       for (const binary of this.data) {
         for (const [rawDate, count] of Object.entries(binary.daily_downloads)) {
           const date = moment(rawDate, 'YYYY-MM-DD', true);
+          dates.push(date);
           if (!(date in downloads)) {
             downloads[date] = 0;
           }
@@ -45,21 +53,22 @@ export default {
       }
 
       // Fill missing dates in range with 0's.
-      const dates = Object.keys(downloads);
       const startDate = Math.min(...dates);
       const endDate = Math.max(...dates);
       let date = moment(startDate);
       while (date <= endDate) {
         if (!(date in downloads)) {
+          dates.push(date);
           downloads[date] = 0;
         }
         date.add(1, 'days');
       }
 
       // Sort downloads by date.
-      const sortedDownloads = Object.entries(downloads);
-      sortedDownloads.sort((a, b) => a[0] - b[0]);
-      console.log(sortedDownloads);
+      dates.sort((a, b) => a.valueOf() - b.valueOf());
+      const sortedDownloads = dates.map((date) => {
+        return [date, downloads[date]];
+      });
 
       // Transform into Chart.js format.
       return {
