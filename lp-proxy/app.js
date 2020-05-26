@@ -7,7 +7,7 @@ app.use('/lp-api', createProxyMiddleware({
   changeOrigin: true,
   target:'https://api.launchpad.net/',
   pathRewrite: {
-    '^/lp-api': '/', // rewrite path
+    '^/lp-api/': '/', // rewrite path
   },
 }));
 app.listen(8000);
