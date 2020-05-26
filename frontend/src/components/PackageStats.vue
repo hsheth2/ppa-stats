@@ -112,15 +112,13 @@ export default {
       );
       console.log(binaries);
 
-      // TODO: change this -- only get first binary
-      return [await this.resolveBinary(binaries[0])];
+      // testing: change this -- only get first binary
+      // return [await this.resolveBinary(binaries[0])];
 
-      /*
       const data = await Promise.all(
         binaries.map((entry) => this.resolveBinary(entry))
       );
       return data;
-      */
     },
   },
   methods: {
