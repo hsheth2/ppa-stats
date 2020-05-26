@@ -88,7 +88,7 @@ export default {
           return Promise.resolve([]);
         }
         return this.$http
-          .get(`/lp-api/1.0/~${ppaOwner}/ppas`)
+          .get(`https://api.launchpad.net/1.0/~${ppaOwner}/ppas?ws.size=300`)
           .then((response) => {
             const ppas = response.data.entries.map((entry) => entry.name);
             console.log(ppas);
@@ -106,14 +106,11 @@ export default {
         }
 
         let binaries = [];
-        let nextLink = `/lp-api/1.0/~${ppaOwner}/+archive/${ppaName}?ws.op=getPublishedBinaries`;
+        let nextLink = `https://api.launchpad.net/1.0/~${ppaOwner}/+archive/${ppaName}?ws.op=getPublishedBinaries`;
         while (nextLink) {
           const response = await this.$http.get(nextLink);
           binaries = binaries.concat(response.data.entries);
-          nextLink = (response.data.next_collection_link || '').replace(
-            'https://api.launchpad.net',
-            '/lp-api'
-          );
+          nextLink = response.data.next_collection_link;
         }
 
         const packages = new Set(

@@ -131,7 +131,7 @@ export default {
 
       const allBinaries = (
         await this.$http.get(
-          `/lp-api/1.0/~${this.ppaOwner}/+archive/${this.ppaName}?ws.op=getPublishedBinaries&binary_name=${this.packageName}&exact_match=true`
+          `https://api.launchpad.net/1.0/~${this.ppaOwner}/+archive/${this.ppaName}?ws.op=getPublishedBinaries&binary_name=${this.packageName}&exact_match=true&ws.size=300`
         )
       ).data.entries;
 
@@ -164,7 +164,7 @@ export default {
       const binaryPubId = entry.self_link.split('/').pop();
       const daily_downloads = (
         await this.$http.get(
-          `/lp-api/1.0/~${this.ppaOwner}/+archive/ubuntu/${this.ppaName}/+binarypub/${binaryPubId}?ws.op=getDailyDownloadTotals`
+          `https://api.launchpad.net/1.0/~${this.ppaOwner}/+archive/ubuntu/${this.ppaName}/+binarypub/${binaryPubId}?ws.op=getDailyDownloadTotals`
         )
       ).data;
       const total_downloads = Object.values(daily_downloads).reduce(
