@@ -1,5 +1,8 @@
 # ppa-stats-web
 
+demo link:
+http://localhost:8080/#/?ppaName=stable&ppaOwner=chromium-team&packageName=chromium-browser
+
 TODO
 - allow querying standard packages e.g. https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedBinaries&exact_match=true&binary_name=silversearcher-ag
 

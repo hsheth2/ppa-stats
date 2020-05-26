@@ -58,7 +58,7 @@ export default {
       let date = moment(startDate);
       while (date <= endDate) {
         if (!(date in downloads)) {
-          dates.push(date);
+          dates.push(moment(date));
           downloads[date] = 0;
         }
         date.add(1, 'days');
@@ -75,6 +75,7 @@ export default {
         datasets: [
           {
             label: 'Downloads',
+            lineTension: 0.2,
             data: sortedDownloads.map((entry) => ({
               t: entry[0],
               y: entry[1],
@@ -85,12 +86,16 @@ export default {
     },
   },
   watch: {
-    chartData: function () {
-      this.renderChart(this.chartData, this.options);
-    },
+    chartData: 'render',
+    options: 'render',
   },
   mounted() {
-    this.renderChart(this.chartData, this.options);
+    this.render();
+  },
+  methods: {
+    render() {
+      this.renderChart(this.chartData, this.options);
+    },
   },
 };
 </script>
