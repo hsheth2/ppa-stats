@@ -5,9 +5,9 @@ The fastest way to view download statistics for a package published in a PPA on 
 **Try it out**: https://ppa-stats.sheth.io/
 
 ### Screenshot
-Download statistics for my [cava package](https://github.com/hsheth2/cava-ppa). Live link: https://ppa-stats.sheth.io/#/?ppaName=ppa&ppaOwner=hsheth2&packageName=cava. 
+Download statistics for my [cava package](https://github.com/hsheth2/cava-ppa). Live link: https://ppa-stats.sheth.io/#/?ppaName=ppa&ppaOwner=hsheth2&packageName=cava.
 
-![screenshot](screenshot.png)
+[![screenshot](screenshot.png)](https://ppa-stats.sheth.io/)
 
 ### Similar Work
 - https://wpitchoune.net/ppastats/
@@ -29,4 +29,6 @@ Download statistics for my [cava package](https://github.com/hsheth2/cava-ppa). 
 - use `ordered=false` on `getPublishedBinaries` for faster results
 - add link to open launchpad for selected PPA
 - add launchpad link for each binary/build in the table
+- add footer with link back to github
+- include publish/create dates in the table
 

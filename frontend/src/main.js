@@ -7,6 +7,8 @@ import VueAxios from 'vue-axios';
 
 import AsyncComputed from 'vue-async-computed';
 
+import '@mdi/font/css/materialdesignicons.css';
+
 import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
 
