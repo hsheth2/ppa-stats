@@ -31,4 +31,5 @@ Download statistics for my [cava package](https://github.com/hsheth2/cava-ppa). 
 - add launchpad link for each binary/build in the table
 - add footer with link back to github
 - include publish/create dates in the table
+- add stat for downloads limited to published packages
 
