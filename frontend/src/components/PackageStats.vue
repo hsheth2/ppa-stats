@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import posthog from 'posthog-js';
 import PackageStatsSummary from '@/components/PackageStatsSummary.vue';
 import PackageDownloadsHistory from '@/components/PackageDownloadsHistory.vue';
 
@@ -124,6 +125,8 @@ export default {
         });
     },
     async resolveData() {
+      posthog.capture('get PPA stats', this.$props);
+
       this.progress = 0;
       if (!this.packageSelected) {
         return Promise.resolve([]);

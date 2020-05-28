@@ -12,6 +12,11 @@ import '@mdi/font/css/materialdesignicons.css';
 import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
 
+import posthog from 'posthog-js';
+posthog.init('_MkAeyS9MxN-0YR0v15cfS4Bi2fSDI5JnY9ypTFeIIQ', {
+  api_host: 'https://posthog.sheth.io',
+});
+
 const axiosInstance = axios.create({
   baseURL: '/',
 });
