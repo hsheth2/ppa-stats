@@ -99,11 +99,14 @@ export default {
     ppa() {
       return `ppa:${this.ppaOwner}/${this.ppaName}`;
     },
+    fullSelection() {
+      // Exists so that changes to any of the props will trigger a single
+      // watch change.
+      return `${this.ppa} - ${this.packageName}`;
+    },
   },
   watch: {
-    ppaOwner: 'fetchData',
-    ppaName: 'fetchData',
-    packageName: 'fetchData',
+    fullSelection: 'fetchData',
   },
   created() {
     this.fetchData();
@@ -125,12 +128,11 @@ export default {
         });
     },
     async resolveData() {
-      posthog.capture('get PPA stats', this.$props);
-
       this.progress = 0;
       if (!this.packageSelected) {
         return Promise.resolve([]);
       }
+      posthog.capture('get PPA stats', this.$props);
 
       const allBinaries = (
         await this.$http.get(
