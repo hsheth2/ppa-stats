@@ -18,10 +18,12 @@ Download statistics for my [cava package](https://github.com/hsheth2/cava-ppa). 
 - `indicator-ppa-download-statistics` from https://launchpad.net/~thebernmeister/+archive/ubuntu/ppa/+packages
 
 ### References
-- https://launchpad.net/+apidoc/1.0.html
+- https://bugs.launchpad.net/launchpad/+bug/688141
 - https://blog.launchpad.net/cool-new-stuff/tracking-ppa-download-statistics
-- https://help.launchpad.net/API/launchpadlib
 - https://ftagada.wordpress.com/2011/01/05/ppa-stats-initial-impressions/
+- https://askubuntu.com/questions/296197/how-to-find-out-the-package-download-count-from-a-ppa
+- https://fosspost.org/tutorials/how-to-get-the-download-stats-of-any-ubuntu-ppa
+- https://launchpad.net/+apidoc/1.0.html
 
 ### To Do
 - write some notes on the technical details of it
