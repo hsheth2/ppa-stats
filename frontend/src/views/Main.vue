@@ -2,9 +2,7 @@
   <div class="main">
     <div class="section main-content">
       <div class="container">
-        <h1 class="title">
-          PPA Download Stats
-        </h1>
+        <h1 class="title">PPA Download Stats</h1>
         <p class="subtitle is-spaced">
           The fastest way to view download statistics for a package published in
           a PPA on Launchpad.

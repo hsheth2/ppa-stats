@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import posthog from 'posthog-js';
 import PackageStatsSummary from '@/components/PackageStatsSummary.vue';
 import PackageDownloadsHistory from '@/components/PackageDownloadsHistory.vue';
 
@@ -132,7 +131,6 @@ export default {
       if (!this.packageSelected) {
         return Promise.resolve([]);
       }
-      posthog.capture('get PPA stats', this.$props);
 
       const allBinaries = (
         await this.$http.get(
