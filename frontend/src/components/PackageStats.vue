@@ -132,6 +132,8 @@ export default {
         return Promise.resolve([]);
       }
 
+      window.umami.trackEvent(this.fullSelection, 'stats');
+
       const allBinaries = (
         await this.$http.get(
           `https://api.launchpad.net/1.0/~${this.ppaOwner}/+archive/${this.ppaName}?ws.op=getPublishedBinaries&binary_name=${this.packageName}&exact_match=true&ws.size=300`
