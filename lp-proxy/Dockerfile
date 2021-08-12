@@ -3,7 +3,7 @@ FROM node
 WORKDIR /app/backend
 
 COPY package.json yarn.lock ./
-RUN yarn
+RUN yarn install --frozen-lockfile
 
 COPY . ./
 
