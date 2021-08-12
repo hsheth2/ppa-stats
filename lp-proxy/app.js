@@ -9,5 +9,10 @@ app.use('/lp-api', createProxyMiddleware({
   pathRewrite: {
     '^/lp-api/': '/', // rewrite path
   },
+  onProxyRes(proxyRes, req, res) {
+    // We want the results from the Launchpad API to get
+    // cached by our CDN for a short duration (10 minutes).
+    proxyRes.headers['cache-control'] = 'public, max-age=600';
+  }
 }));
 app.listen(8000);
