@@ -2,6 +2,7 @@ version: '2'
 
 services:
   frontend:
+    image: ghcr.io/hsheth2/ppa-stats-frontend:latest
     build: frontend
     restart: always
     labels:
@@ -13,6 +14,7 @@ services:
        - traefik
        - default
   lp-proxy:
+    image: ghcr.io/hsheth2/ppa-stats-lp-proxy:latest
     build: lp-proxy
     restart: always
     labels:

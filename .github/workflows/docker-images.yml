@@ -2,15 +2,15 @@ name: Docker Images CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
+    env:
+      PUSH_IMAGES: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
     steps:
     - uses: actions/checkout@v2
@@ -18,13 +18,13 @@ jobs:
       run: docker-compose build
                   
     - name: Log in to the Container registry
-      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ env.PUSH_PACKAGES }}
+      uses: docker/login-action@v1
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish the Docker images
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ env.PUSH_PACKAGES }}
       run: docker-compose push

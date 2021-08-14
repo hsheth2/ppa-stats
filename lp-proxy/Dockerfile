@@ -1,4 +1,5 @@
 FROM node
+LABEL org.opencontainers.image.source=https://github.com/hsheth2/ppa-stats
 
 WORKDIR /app/backend
 
