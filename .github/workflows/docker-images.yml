@@ -1,0 +1,30 @@
+name: Docker Images CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker images
+      run: docker-compose build
+                  
+    - name: Log in to the Container registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish the Docker images
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      run: docker-compose push
