@@ -31,7 +31,6 @@ Download statistics for my [cava package](https://github.com/hsheth2/cava-ppa). 
 - use `ordered=false` on `getPublishedBinaries` for faster results
 - add link to open launchpad for selected PPA
 - add launchpad link for each binary/build in the table
-- add footer with link back to github
 - include publish/create dates in the table
 - add stat for downloads limited to published packages
 
