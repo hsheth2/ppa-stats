@@ -132,7 +132,11 @@ export default {
         return Promise.resolve([]);
       }
 
-      window.umami && window.umami.trackEvent(this.fullSelection.replace('ppa:', ''), 'stats');
+      window.umami &&
+        window.umami.trackEvent(
+          this.fullSelection.replace('ppa:', ''),
+          'stats'
+        );
 
       const allBinaries = (
         await this.$http.get(
