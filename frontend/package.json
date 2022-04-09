@@ -14,7 +14,7 @@
     "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "debounce-promise": "^3.1.2",
-    "moment": "^2.26.0",
+    "moment": "^2.29.2",
     "vue": "^2.6.11",
     "vue-async-computed": "^3.8.2",
     "vue-axios": "^2.1.5",
