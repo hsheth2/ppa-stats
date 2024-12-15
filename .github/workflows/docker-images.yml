@@ -2,9 +2,9 @@ name: Docker Images CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   contents: read
@@ -17,18 +17,18 @@ jobs:
       PUSH_IMAGES: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker images
-      run: docker-compose build
-                  
-    - name: Log in to the Container registry
-      if: ${{ env.PUSH_IMAGES == 'true' }}
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: Build the Docker images
+        run: docker compose build
 
-    - name: Publish the Docker images
-      if: ${{ env.PUSH_IMAGES == 'true' }}
-      run: docker-compose push
+      - name: Log in to the Container registry
+        if: ${{ env.PUSH_IMAGES == 'true' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish the Docker images
+        if: ${{ env.PUSH_IMAGES == 'true' }}
+        run: docker compose push
