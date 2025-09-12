@@ -133,10 +133,9 @@ export default {
       }
 
       window.umami &&
-        window.umami.trackEvent(
-          this.fullSelection.replace('ppa:', ''),
-          'stats'
-        );
+        window.umami.track('ppa-stats', {
+          package: this.fullSelection.replace('ppa:', ''),
+        });
 
       const allBinaries = (
         await this.$http.get(
