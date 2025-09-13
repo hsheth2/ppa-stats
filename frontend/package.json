@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@mdi/font": "^5.3.45",
-    "axios": "^1.8.2",
+    "axios": "^1.12.0",
     "buefy": "^0.8.19",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
