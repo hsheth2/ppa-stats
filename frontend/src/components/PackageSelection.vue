@@ -3,9 +3,9 @@
     <div class="column">
       <b-field label="PPA Owner">
         <b-input
-          :value="ppaOwner"
+          :model-value="ppaOwner"
           placeholder="e.g. hsheth2"
-          @input="$emit('update:ppaOwner', $event)"
+          @update:model-value="$emit('update:ppaOwner', $event)"
         ></b-input>
       </b-field>
     </div>
@@ -13,14 +13,14 @@
     <div class="column">
       <b-field label="PPA Name">
         <b-autocomplete
-          :value="ppaName"
+          :model-value="ppaName"
           :loading="$asyncComputed.ppaNameSuggestions.updating"
           :data="filteredPpaNameSuggestions"
           placeholder="e.g. apps"
           open-on-focus
-          @input="$emit('update:ppaName', $event)"
+          @update:model-value="$emit('update:ppaName', $event)"
         >
-          <template slot="empty">
+          <template #empty>
             {{ textForSuggestion($asyncComputed.ppaNameSuggestions.state) }}
           </template>
         </b-autocomplete>
@@ -30,14 +30,14 @@
     <div class="column">
       <b-field label="Package Name">
         <b-autocomplete
-          :value="packageName"
+          :model-value="packageName"
           :loading="$asyncComputed.packageSuggestions.updating"
           :data="filteredPackageSuggestions"
           placeholder="e.g. firefox"
           open-on-focus
-          @input="$emit('update:packageName', $event)"
+          @update:model-value="$emit('update:packageName', $event)"
         >
-          <template slot="empty">
+          <template #empty>
             {{ textForSuggestion($asyncComputed.packageSuggestions.state) }}
           </template>
         </b-autocomplete>
@@ -45,7 +45,7 @@
     </div>
 
     <div class="column">
-      <b-button class="space-on-top" @click="$emit('selectPackage')"
+      <b-button class="space-on-top" @click="$emit('select-package')"
         >Get Statistics</b-button
       >
     </div>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-const debounce = require('debounce-promise');
+import debounce from 'debounce-promise';
 
 export default {
   name: 'PackageSelection',
@@ -62,6 +62,12 @@ export default {
     ppaName: { type: String, required: true },
     packageName: { type: String, required: true },
   },
+  emits: [
+    'select-package',
+    'update:ppaOwner',
+    'update:ppaName',
+    'update:packageName',
+  ],
   computed: {
     filteredPpaNameSuggestions() {
       return (this.ppaNameSuggestions || []).filter((option) => {
@@ -136,7 +142,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .space-on-top {
   margin-top: 2em;

@@ -25,6 +25,32 @@ Download statistics for my [cava package](https://github.com/hsheth2/cava-ppa). 
 - https://fosspost.org/tutorials/how-to-get-the-download-stats-of-any-ubuntu-ppa
 - https://launchpad.net/+apidoc/1.0.html
 
+### Development
+
+The project uses Node 24 and Yarn 1. The frontend is a Vue 3/Vite app; the
+backend is a small Express proxy that rewrites `/lp-api` requests to Launchpad
+and adds a one-hour public cache header for CDN caching.
+
+```sh
+cd lp-proxy
+yarn install
+node app.js
+```
+
+```sh
+cd frontend
+yarn install
+yarn serve
+yarn lint
+yarn build
+```
+
+The production images are built through Docker Compose:
+
+```sh
+docker compose build
+```
+
 ### To Do
 - write some notes on the technical details of it
 - allow querying standard packages e.g. https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedBinaries&exact_match=true&binary_name=silversearcher-ag
@@ -33,4 +59,3 @@ Download statistics for my [cava package](https://github.com/hsheth2/cava-ppa). 
 - add launchpad link for each binary/build in the table
 - include publish/create dates in the table
 - add stat for downloads limited to published packages
-

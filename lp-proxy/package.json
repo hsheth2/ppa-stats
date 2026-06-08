@@ -1,9 +1,7 @@
 {
+  "packageManager": "yarn@1.22.22",
   "dependencies": {
-    "express": "^4.19.2",
-    "http-proxy-middleware": "^1.0.4"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.4"
+    "express": "^4.22.2",
+    "http-proxy-middleware": "^4.1.0"
   }
 }

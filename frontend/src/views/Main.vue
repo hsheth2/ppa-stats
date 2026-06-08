@@ -8,7 +8,12 @@
           a PPA on Launchpad.
         </p>
 
-        <PackageSelection v-bind.sync="input" @selectPackage="handleSelect" />
+        <PackageSelection
+          v-model:ppa-owner="input.ppaOwner"
+          v-model:ppa-name="input.ppaName"
+          v-model:package-name="input.packageName"
+          @select-package="handleSelect"
+        />
 
         <hr />
 
@@ -37,7 +42,7 @@ import PackageSelection from '@/components/PackageSelection.vue';
 import PackageStats from '@/components/PackageStats.vue';
 
 export default {
-  name: 'Main',
+  name: 'MainView',
   components: {
     PackageSelection,
     PackageStats,

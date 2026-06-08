@@ -1,16 +1,14 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 
 import axios from 'axios';
-import VueAxios from 'vue-axios';
 
 import AsyncComputed from 'vue-async-computed';
 
 import '@mdi/font/css/materialdesignicons.css';
-
 import Buefy from 'buefy';
-import 'buefy/dist/buefy.css';
+import 'buefy/dist/css/buefy.css';
 
 const axiosInstance = axios.create({
   baseURL: '/',
@@ -21,13 +19,10 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config;
 });
-Vue.use(VueAxios, axiosInstance);
 
-Vue.use(Buefy);
-Vue.use(AsyncComputed);
-Vue.config.productionTip = false;
-
-new Vue({
-  router,
-  render: (h) => h(App),
-}).$mount('#app');
+const app = createApp(App);
+app.config.globalProperties.$http = axiosInstance;
+app.use(Buefy);
+app.use(AsyncComputed);
+app.use(router);
+app.mount('#app');

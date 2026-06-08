@@ -1,10 +1,37 @@
+<template>
+  <div class="chart-container">
+    <LineChart :data="chartData" :options="options" />
+  </div>
+</template>
+
 <script>
+import 'chartjs-adapter-moment';
 import moment from 'moment';
-import VueCharts from 'vue-chartjs';
+import {
+  Chart as ChartJS,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  TimeScale,
+  Tooltip,
+} from 'chart.js';
+import { Line as LineChart } from 'vue-chartjs';
+
+ChartJS.register(
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  TimeScale,
+  Tooltip
+);
 
 export default {
   name: 'PackageDownloadsHistory',
-  extends: VueCharts.Line,
+  components: {
+    LineChart,
+  },
   props: {
     data: {
       type: Array,
@@ -16,24 +43,17 @@ export default {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        xAxes: [
-          {
-            type: 'time',
-            distribution: 'series',
-            time: {
-              round: 'day',
-              minUnit: 'day',
-              tooltipFormat: 'YYYY-MM-DD',
-            },
+        x: {
+          type: 'time',
+          time: {
+            round: 'day',
+            minUnit: 'day',
+            tooltipFormat: 'YYYY-MM-DD',
           },
-        ],
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-            },
-          },
-        ],
+        },
+        y: {
+          beginAtZero: true,
+        },
       },
     },
   }),
@@ -41,15 +61,32 @@ export default {
     chartData() {
       const dates = [];
       const downloads = {};
+
       for (const binary of this.data) {
         for (const [rawDate, count] of Object.entries(binary.daily_downloads)) {
           const date = moment(rawDate, 'YYYY-MM-DD', true);
+          if (!date.isValid()) {
+            continue;
+          }
+
           if (!(date in downloads)) {
             dates.push(date);
             downloads[date] = 0;
           }
           downloads[date] += count;
         }
+      }
+
+      if (dates.length === 0) {
+        return {
+          datasets: [
+            {
+              label: 'Downloads',
+              tension: 0.2,
+              data: [],
+            },
+          ],
+        };
       }
 
       // Fill missing dates in range with 0's.
@@ -75,9 +112,9 @@ export default {
         datasets: [
           {
             label: 'Downloads',
-            lineTension: 0.2,
+            tension: 0.2,
             data: sortedDownloads.map((entry) => ({
-              t: entry[0],
+              x: entry[0],
               y: entry[1],
             })),
           },
@@ -85,20 +122,12 @@ export default {
       };
     },
   },
-  watch: {
-    chartData: 'render',
-    options: 'render',
-  },
-  mounted() {
-    this.render();
-  },
-  methods: {
-    render() {
-      this.renderChart(this.chartData, this.options);
-    },
-  },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+.chart-container {
+  min-height: 320px;
+  position: relative;
+}
+</style>
