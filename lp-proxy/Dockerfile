@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:24
 LABEL org.opencontainers.image.source=https://github.com/hsheth2/ppa-stats
 
 WORKDIR /app/backend
