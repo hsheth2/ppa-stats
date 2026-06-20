@@ -277,10 +277,10 @@ http-errors@~2.0.0, http-errors@~2.0.1:
     statuses "~2.0.2"
     toidentifier "~1.0.1"
 
-http-proxy-middleware@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-4.1.0.tgz#f2e4a9348cc4f9263364e48374e23a384c03ce89"
-  integrity sha512-XUOAjKncPZjsrgDTTem+CUED6A+piUAKTOwBM8g1gAublBX/GdxTHP8mO+og1EW1evYP8wd0G2c111tExwo/jw==
+http-proxy-middleware@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-4.1.1.tgz#d1155140b540fc47fce16a6c98a75a643e992b90"
+  integrity sha512-KX5ZofGXLFXqFAkQoOWZ+rTtaLTut7m0gyL+QzJrdejtIZ+F4bPPDoe7reISg2+v0CAz5OfVwEJEhty7X+e57g==
   dependencies:
     debug "^4.4.3"
     httpxy "^0.5.3"
