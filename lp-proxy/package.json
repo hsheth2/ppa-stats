@@ -2,6 +2,6 @@
   "packageManager": "yarn@1.22.22",
   "dependencies": {
     "express": "^4.22.2",
-    "http-proxy-middleware": "^4.1.0"
+    "http-proxy-middleware": "^4.1.1"
   }
 }
