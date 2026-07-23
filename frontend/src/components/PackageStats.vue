@@ -137,11 +137,13 @@ export default {
           package: this.fullSelection.replace('ppa:', ''),
         });
 
-      const allBinaries = (
-        await this.$http.get(
-          `https://api.launchpad.net/1.0/~${this.ppaOwner}/+archive/${this.ppaName}?ws.op=getPublishedBinaries&binary_name=${this.packageName}&exact_match=true&ws.size=300`
-        )
-      ).data.entries;
+      let allBinaries = [];
+      let nextLink = `https://api.launchpad.net/1.0/~${this.ppaOwner}/+archive/${this.ppaName}?ws.op=getPublishedBinaries&binary_name=${this.packageName}&exact_match=true&ws.size=300`;
+      while (nextLink) {
+        const response = await this.$http.get(nextLink);
+        allBinaries = allBinaries.concat(response.data.entries);
+        nextLink = response.data.next_collection_link;
+      }
 
       // Deduplication. Each binary is produced by a build, and then optionally copied
       // to a variety of different distribution lists.
