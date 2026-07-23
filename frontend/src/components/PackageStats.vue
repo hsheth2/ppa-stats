@@ -182,10 +182,11 @@ export default {
         0
       );
 
-      // e.g. "cava 0.6.1-0-1 in bionic i386"
-      const info = entry.display_name.split(' ');
-      const distro = info[3];
-      const arch = info[4];
+      // e.g. https://api.launchpad.net/1.0/ubuntu/bionic/i386
+      const [distro, publishedArch] = entry.distro_arch_series_link
+        .split('/')
+        .slice(-2);
+      const arch = entry.architecture_specific ? publishedArch : 'all';
 
       const binary = {
         distro,
