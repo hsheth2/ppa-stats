@@ -200,10 +200,12 @@ export default {
         }
       }
 
-      if (dates.length === 0) {
-        return {
-          datasets: [downloadsDataset(colors, [])],
-        };
+      // Launchpad omits dates with no downloads, so make the current date an
+      // explicit zero-count endpoint when it has no reported downloads.
+      const today = moment().startOf('day');
+      if (!(today in downloads)) {
+        dates.push(today);
+        downloads[today] = 0;
       }
 
       // Fill missing dates in range with 0's.
