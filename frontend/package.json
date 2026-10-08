@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "axios": "^1.17.0",
+    "axios": "^1.20.0",
     "buefy": "^3.0.7",
     "chart.js": "^4.5.1",
     "chartjs-adapter-moment": "^1.0.1",
